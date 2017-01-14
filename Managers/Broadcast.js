@@ -30,7 +30,8 @@ class Broadcast {
 
     play() {
         let { song, stream } = this.pickStream();
-        this.dispatcher.playStream(stream);
+        this.dispatcher.playStream(stream, { volume: 0.5, passes: 3 });
+        this.dispatcher.setVolume(this.title === "country" ? 0.5 : 0.35);
         this.current = song;
     }
 

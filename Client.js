@@ -22,9 +22,9 @@ const client = new class extends Discord.Client {
             setTimeout(() => this.broadcastsManager.begin(), 3000);
         });
 
-        this.on("error", console.error);
+        this.on("error", err => console.error(err));
 
-        this.on("warn", console.error);
+        this.on("warn", err => console.error(err));
 
         this.on("disconnect", () => console.log("Disconnected!"));
 
