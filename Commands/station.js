@@ -9,6 +9,7 @@ module.exports = (message, response) => {
 
     connection.playBroadcast(broadcast);
     connection.station = station;
+    response.reply(`Changed to the **${station}** station.`);
 };
 
 module.exports.init = (client, path) => { this.client = client; module.exports.path = path; };

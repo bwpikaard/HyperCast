@@ -1,5 +1,5 @@
 module.exports = (message, response) => {
-    response.send(`\`\`\`autohotkey\n• ${this.client.guilds.size} Servers\n• ${this.client.voiceConnections.size} Connections\n\`\`\``);
+    response.send(`I'm currently stream to **${this.client.voiceConnections.size} channels** and in **${this.client.guilds.size} servers**.`);
 };
 
 module.exports.init = (client, path) => { this.client = client; module.exports.path = path; };
