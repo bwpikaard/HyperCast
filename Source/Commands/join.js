@@ -12,7 +12,7 @@ module.exports = (message, response) => {
     channel.join().then(connection => {
         connection.station = station;
         response.send(`Connected to station **${station}**.`);
-        connection.playBroadcast(broadcast);
+        setTimeout(() => connection.playBroadcast(broadcast), 1000);
     }).catch(err => {
         response.error(`Error occured:\n\n${err.stack}`);
     });

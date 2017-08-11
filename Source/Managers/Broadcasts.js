@@ -1,4 +1,4 @@
-const fs = require("fs-extra-promise");
+const klaw = require("klaw");
 const path = require("path");
 const stations = path.resolve(`${__dirname.replace(/\/\w+$/, ``)}/Stations/`);
 
@@ -14,7 +14,7 @@ class BroadcastsManager {
     }
 
     load() {
-        fs.walk(stations).on("data", item => {
+        klaw(stations).on("data", item => {
             let file = path.parse(item.path);
             if (!file.ext || file.ext !== ".json") return;
 

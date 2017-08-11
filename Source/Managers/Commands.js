@@ -1,4 +1,4 @@
-const fs = require("fs-extra-promise");
+const klaw = require("klaw");
 const path = require("path");
 const commands = path.resolve(`${__dirname.replace(/\/\w+$/, ``)}/Commands/`);
 
@@ -25,7 +25,7 @@ class CommandsManager {
     }
 
     loadAll() {
-        fs.walk(commands).on("data", item => {
+        klaw(commands).on("data", item => {
             let file = path.parse(item.path);
             if (!file.ext || file.ext !== ".js") return;
             this.load(file.name, `${file.dir}${path.sep}${file.base}`);
