@@ -1,7 +1,14 @@
-module.exports = (message, response) => {
-    response.send("Pinging...").then(msg => {
-        msg.edit(`Pong! | Took ${msg.createdTimestamp - message.createdTimestamp}ms.`);
-    });
-};
+const Command = require("../structures/Command");
 
-module.exports.init = (client, path) => { this.client = client; module.exports.path = path; };
+module.exports = class extends Command {
+    constructor(client, filePath) {
+        super(client, filePath, {
+            name: "ping"
+        });
+    }
+
+    async execute(message, response) {
+        const msg = await response.send("Pinging...");
+        msg.edit(`Command Execution Time : ${msg.createdTimestamp - message.createdTimestamp}ms | Discord API Latency : ${Math.floor(this.client.pings[0])}ms`);
+    }
+};

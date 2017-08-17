@@ -1,55 +1,44 @@
 const klaw = require("klaw");
 const path = require("path");
-const commands = path.resolve(`${__dirname.replace(/\/\w+$/, ``)}/Commands/`);
+const commandsPath = path.join(__dirname, "..", "commands");
 
-class CommandsManager {
+module.exports = class {
     constructor(client) {
         this.client = client;
 
         this.data = new Map();
 
-        this.loadAll();
+        this.init();
     }
 
-    load(name, path) {
-        if (this.data.has(name)) {
-            delete require.cache[require.resolve(path)];
-            let command = require(path);
-            command.init(this.client, path);
-            this.data.set(name, command);
-        } else {
-            let command = require(path);
-            command.init(this.client, path);
-            this.data.set(name, command);
-        }
+    load(filePath) {
+        const command = new (require(filePath))(this.client, filePath);
+        this.data.set(command.name, command);
     }
 
-    loadAll() {
-        klaw(commands).on("data", item => {
-            let file = path.parse(item.path);
+    reload(filePath) {
+        delete require.cache[filePath];
+        const command = new (require(filePath))(this.client);
+        this.data.set(command.name, command);
+    }
+
+    init() {
+        klaw(commandsPath).on("data", item => {
+            const file = path.parse(item.path);
             if (!file.ext || file.ext !== ".js") return;
-            this.load(file.name, `${file.dir}${path.sep}${file.base}`);
-        });
-        return this;
-    }
-
-    reload(input) {
-        return new Promise((resolve, reject) => {
-            if (!this.data.has(input)) return reject("Invalid Command");
-            let command = this.data.get(input);
-            this.load(input, command.path);
+            this.load(`${file.dir}/${file.base}`);
         });
     }
 
     get(text) {
         return new Promise((resolve, reject) => {
             if (this.data.has(text)) return resolve(this.data.get(text));
+
             this.data.forEach(c => {
                 if (c.aliases && c.aliases.includes(text)) return resolve(c);
             });
+
             return resolve();
         });
     }
-}
-
-module.exports = CommandsManager;
+};

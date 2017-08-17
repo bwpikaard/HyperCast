@@ -1,37 +1,43 @@
-const Discord = require("discord.js");
+require("./utility/Extenders.js");
 
-let CommandsManager = require("./Managers/Commands");
-let MessagesManager = require("./Managers/Messages");
-let BroadcastsManager = require("./Managers/Broadcasts");
+const { Client, Collection } = require("discord.js");
 
-const client = new class extends Discord.Client {
+//let Database = require("./managers/Database");
+
+let EventsManager = require("./managers/Events");
+let CommandsManager = require("./managers/Commands");
+//let SettingsManager = require("./managers/Settings");
+let BroadcastsManager = require("./managers/Broadcasts");
+
+let Functions = require("./utility/Functions");
+
+const client = new class extends Client {
     constructor() {
-        super({ messageCacheMaxSize: 1 });
+        super({ messageCacheMaxSize: 150 });
 
-        this.shardData;
-        this.shardID = process.env.SHARD_ID;
-        this.shardCount = process.env.SHARD_COUNT;
+        this.build = process.env.CLIENT_BUILD;
+        this.config = require(`../configs/${this.build}`);
 
-        this.config = require("../config.json");
+        this.shardID = +process.env.SHARD_ID;
+        this.shardNumber = +process.env.SHARD_ID + 1;
+        this.shardCount = +process.env.SHARD_COUNT;
+
+        //this.database = new Database();
+
+        this.eventsManager = new EventsManager(this);
         this.commandsManager = new CommandsManager(this);
-        this.messagesManager = new MessagesManager(this);
+        //this.settingsManager = new SettingsManager(this);
         this.broadcastsManager = new BroadcastsManager(this);
 
-        this.once("ready", () => {
+        this.functions = new Functions(this);
+
+        this.shardData = {};
+
+        /*this.once("ready", () => {
             setTimeout(() => this.broadcastsManager.begin(), 5000);
-        })
-
-        .on("message", message => this.messagesManager.process(message))
-        .on("ready", () => {
-            this.log("Client Connected");
-
-            setInterval(() => this.transmit("voiceConnections"), 10000);
-            this.transmit("guilds");
-
-            this.user.setGame(`Client Connecting`);
-            setTimeout(() => this.user.setGame(`${this.config.prefix}help | ${this.shardData.guilds} Servers`), 10000);
-            setInterval(() => this.user.setGame(`${this.config.prefix}help | ${this.shardData.guilds} Servers`), 300000);
-        })
+        })*/
+        this.once("ready", () => this.eventsManager.ready())
+        .on("message", message => this.eventsManager.message(message))
         .on("error", err => this.log(err, true))
         .on("warn", err => this.log(err, true))
         .on("disconnect", () => this.log("Disconnected!"))
@@ -40,28 +46,64 @@ const client = new class extends Discord.Client {
         this.login(this.config.token);
     }
 
-    transmit(stat) {
-        process.send({
-            "type": "stat",
-            "data": {
-                [stat]: this[stat].size
-            }
+    log(content, error = false) {
+        error ?
+            console.error(`SHARD ${this.shardID} | ${content}`) :
+            console.log(`SHARD ${this.shardID} | ${content}`);
+    }
+
+    transmit(type, data = {}) {
+        process.send({ type, data });
+    }
+
+    transmitStat(stat) {
+        this.transmit("stat", { [stat]: this[stat].size });
+    }
+
+    transmitStats() {
+        this.transmit("stats", {
+            guilds: this.guilds.size,
+            channels: this.channels.size,
+            voiceConnections: this.voiceConnections.size,
+            users: this.users.size
         });
     }
 
-    log(content, error = false) {
-        if (error) return console.error(`SHARD ${this.shardID} | ${content}`);
-        return console.log(`SHARD ${this.shardID} | ${content}`);
-    }
+    reload(input) {
+        const match = /(\w+)(?::(\w+))?/i.exec(input);
+        if (!match && input !== "all") return;
 
-    reload(mod) {
-        let all = mod === "all";
-        if (all || mod === "commands") {
-            return this.commands.reloadAll();
-        }
-        if (all || mod === "config") {
-            delete require.cache[`${__dirname}/config.json`];
-            return this.config = require("./config.json");
+        const mod = match ? match[1] : null;
+        const all = input === "all";
+
+        if (mod === "database") {
+            delete require.cache[`${__dirname}/Managers/Database.js`];
+            Database = require("./Managers/Database");
+            this.database = new Database();
+        } else if (all || mod === "events") {
+            delete require.cache[`${__dirname}/Managers/Events.js`];
+            EventsManager = require("./Managers/Events");
+            this.eventsManager = new EventsManager(this);
+        } else if (mod === "commands") {
+            const command = match[2];
+
+            if (command) {
+                this.commandsManager.get(command).then(cmd => {
+                    if (!cmd) return; this.commandsManager.reload(cmd.path);
+                });
+            } else {
+                delete require.cache[`${__dirname}/Managers/Commands.js`];
+                CommandsManager = require("./Managers/Commands");
+                this.commandsManager = new CommandsManager(this);
+            }
+        } else if (mod === "settings") {
+            delete require.cache[`${__dirname}/Managers/Settings.js`];
+            SettingsManager = require("./Managers/Settings");
+            this.settingsManager = new SettingsManager(this);
+        } else if (all || mod === "functions") {
+            delete require.cache[`${__dirname}/Utility/Functions.js`];
+            Functions = require("./Utility/Functions");
+            this.functions = new Functions(this);
         }
     }
 };

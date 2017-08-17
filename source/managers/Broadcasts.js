@@ -1,8 +1,8 @@
 const klaw = require("klaw");
 const path = require("path");
-const stations = path.resolve(`${__dirname.replace(/\/\w+$/, ``)}/Stations/`);
+const stations = path.join(__dirname, "..", "stations");
 
-const Broadcast = require("./Broadcast");
+const Broadcast = require("../structures/Broadcast");
 
 class BroadcastsManager {
     constructor(client) {
@@ -15,11 +15,11 @@ class BroadcastsManager {
 
     load() {
         klaw(stations).on("data", item => {
-            let file = path.parse(item.path);
+            const file = path.parse(item.path);
             if (!file.ext || file.ext !== ".json") return;
 
-            let songs = require(`${file.dir}${path.sep}${file.base}`);
-            let data = new Broadcast(this.client, file.name, songs);
+            const songs = require(`${file.dir}${path.sep}${file.base}`);
+            const data = new Broadcast(this.client, file.name, songs);
             this.data.set(file.name, data);
         });
     }
