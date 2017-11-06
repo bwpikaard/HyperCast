@@ -28,9 +28,9 @@ const client = new class extends Discord.Client {
             setInterval(() => this.transmit("voiceConnections"), 10000);
             this.transmit("guilds");
 
-            this.user.setGame(`Client Connecting`);
-            setTimeout(() => this.user.setGame(`${this.config.prefix}help | ${this.shardData.guilds} Servers`), 10000);
-            setInterval(() => this.user.setGame(`${this.config.prefix}help | ${this.shardData.guilds} Servers`), 300000);
+            this.user.setActivity(`Client Connecting`);
+            setTimeout(() => this.user.setActivity(`${this.config.prefix}help | ${this.shardData.guilds} Servers`), 10000);
+            setInterval(() => this.user.setActivity(`${this.config.prefix}help | ${this.shardData.guilds} Servers`), 300000);
         })
         .on("error", err => this.log(err, true))
         .on("warn", err => this.log(err, true))
