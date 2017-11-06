@@ -7,7 +7,7 @@ class Events {
 
     ready() {
         this.client.log(`Client connected with ${this.client.guilds.size} guilds, ${this.client.channels.size} channels, and ${this.client.users.size} users.`);
-        this.client.user.setGame(`Client Connecting`);
+        this.client.user.setActivity(`Client Connecting`);
         this.client.transmitStats();
 
         setInterval(() => this.client.transmitStats(), 1000 * 30);
