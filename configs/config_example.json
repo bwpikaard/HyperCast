@@ -1,0 +1,10 @@
+{
+  "token": "your-bot-token-here",
+  "prefix": "g!",
+  "levels": {
+    "your-user-id-here": {
+      "level": 3
+    }
+  },
+  "shards": 1
+}
