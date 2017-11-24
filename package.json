@@ -1,4 +1,25 @@
 {
+    "name": "hypercast",
+    "version": "2.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js"
+    },
+    "author": "HyperCoder#2975 (http://typicalbot.com)",
+    "contributors": [
+        "York (http://anidiots.guide)"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/HyperCoder2975/HyperCast#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/HyperCoder2975/HyperCast.git"
+    },
+    "bugs": {
+        "url": "https://github.com/HyperCoder2975/HyperCast/issues"
+    },
     "dependencies": {
         "discord.js": "github:hydrabolt/discord.js",
         "erlpack": "github:hammerandchisel/erlpack",

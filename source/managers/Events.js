@@ -13,8 +13,8 @@ class Events {
         setInterval(() => this.client.transmitStats(), 1000 * 30);
 
         setInterval(() => {
-            this.client.user.setGame(`${this.config.prefix}help | ${this.shardData.guilds} Servers`);
-        }, 1000 * 60 * 2);
+            this.client.user.setActivity(`${this.client.config.prefix}help | ${this.client.shardData.guilds} Servers`);
+        }, 1000 * 60);// * 2);
     }
 
     async message(message) {

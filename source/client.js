@@ -7,7 +7,7 @@ const { Client, Collection } = require("discord.js");
 let EventsManager = require("./managers/Events");
 let CommandsManager = require("./managers/Commands");
 //let SettingsManager = require("./managers/Settings");
-let BroadcastsManager = require("./managers/Broadcasts");
+const BroadcastsManager = require("./managers/Broadcasts");
 
 let Functions = require("./utility/Functions");
 
@@ -36,12 +36,13 @@ const client = new class extends Client {
         /*this.once("ready", () => {
             setTimeout(() => this.broadcastsManager.begin(), 5000);
         })*/
+        
         this.once("ready", () => this.eventsManager.ready())
-        .on("message", message => this.eventsManager.message(message))
-        .on("error", err => this.log(err, true))
-        .on("warn", err => this.log(err, true))
-        .on("disconnect", () => this.log("Disconnected!"))
-        .on("reconnecting", () => this.log("Reconnecting!"));
+            .on("message", message => this.eventsManager.message(message))
+            .on("error", err => this.log(err, true))
+            .on("warn", err => this.log(err, true))
+            .on("disconnect", () => this.log("Disconnected!"))
+            .on("reconnecting", () => this.log("Reconnecting!"));
 
         this.login(this.config.token);
     }
@@ -76,11 +77,13 @@ const client = new class extends Client {
         const mod = match ? match[1] : null;
         const all = input === "all";
 
-        if (mod === "database") {
-            delete require.cache[`${__dirname}/Managers/Database.js`];
-            Database = require("./Managers/Database");
-            this.database = new Database();
-        } else if (all || mod === "events") {
+        // if (mod === "database") {
+        //     delete require.cache[`${__dirname}/Managers/Database.js`];
+        //     Database = require("./Managers/Database");
+        //     this.database = new Database();
+        // } else
+        
+        if (all || mod === "events") {
             delete require.cache[`${__dirname}/Managers/Events.js`];
             EventsManager = require("./Managers/Events");
             this.eventsManager = new EventsManager(this);
@@ -96,11 +99,15 @@ const client = new class extends Client {
                 CommandsManager = require("./Managers/Commands");
                 this.commandsManager = new CommandsManager(this);
             }
-        } else if (mod === "settings") {
-            delete require.cache[`${__dirname}/Managers/Settings.js`];
-            SettingsManager = require("./Managers/Settings");
-            this.settingsManager = new SettingsManager(this);
-        } else if (all || mod === "functions") {
+        } else
+        
+        // if (mod === "settings") {
+        //     delete require.cache[`${__dirname}/Managers/Settings.js`];
+        //     SettingsManager = require("./Managers/Settings");
+        //     this.settingsManager = new SettingsManager(this);
+        // } else
+        
+        if (all || mod === "functions") {
             delete require.cache[`${__dirname}/Utility/Functions.js`];
             Functions = require("./Utility/Functions");
             this.functions = new Functions(this);

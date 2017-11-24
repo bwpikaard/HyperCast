@@ -22,6 +22,14 @@ module.exports = class {
         this.data.set(command.name, command);
     }
 
+    reloadAll() {
+        this.data.forEach(c => {
+            delete require.cache[c.path];
+            const command = new (require(c.path))(this.client);
+            this.data.set(c.name, command);
+        });
+    }
+
     init() {
         klaw(commandsPath).on("data", item => {
             const file = path.parse(item.path);
