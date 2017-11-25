@@ -17,7 +17,7 @@ module.exports = class extends Command {
             .setTitle("HyperCast Statistics")
             .addField("» Uptime", this.client.functions.convertTime(this.client.uptime), true)
             .addField("» Servers", `${this.client.shardData.guilds.toLocaleString()} (${this.client.shardCount} Shard${this.client.shardCount > 1 ? "s" : ""})`, true)
-            .addField("» Servers", `${this.client.shardData.voiceConnections.toLocaleString()}`, true)
+            .addField("» Voice Connections", `${this.client.shardData.voiceConnections.toLocaleString()}`, true)
             .addField("» Library", "discord.js", true)
             .addField("» Created By", "HyperCoder#2975", true)
             .addField("» Shard", `${this.client.shardNumber} / ${this.client.shardCount}`, true)
