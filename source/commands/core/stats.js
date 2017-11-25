@@ -26,8 +26,6 @@ module.exports = class extends Command {
             .addField("» CPU Usage", `${Math.round(loadavg()[0] * 10000) / 100}%`, true)
             .addField("» RAM (Used)", `${Math.round(100 * (process.memoryUsage().heapUsed / 1048576)) / 100}MB`, true)
             .addField("» RAM (Total)", `${Math.round(100 * (process.memoryUsage().heapTotal / 1048576)) / 100}MB`, true)
-            .setFooter(this.client.user.username, this.client.user.displayAvatarURL())
-            .setTimestamp()
             .send();
     }
 };
