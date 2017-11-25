@@ -2,6 +2,9 @@
     "token": "your-bot-token-here",
     "id": "bot-id",
 
+    "pm2Process": "HC",
+    "dirHOME": "/home/hypercoder",
+
     "creator": "105408136285818880",
 
     "prefix": "h!",
