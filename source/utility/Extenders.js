@@ -2,6 +2,8 @@ const { MessageEmbed, TextChannel, DMChannel, User, Message } = require("discord
 
 MessageEmbed.prototype.send = function(content) {
     if (!this.sendToChannel || !(this.sendToChannel instanceof TextChannel || this.sendToChannel instanceof User || this.sendToChannel instanceof DMChannel)) return Promise.reject("Embed not created in a channel");
+    if (!this.color) this.setColor(this.client.config.embedColor || 0x52C7CE);
+    
     return this.sendToChannel.send(content || "", { embed: this });
 };
 

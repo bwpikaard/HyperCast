@@ -6,11 +6,7 @@
 
     "prefix": "h!",
 
-    "levels": {
-        "your-user-id-here": {
-            "level": 3
-        }
-    },
+    "embedColor": "00aa00",
 
     "shards": 1
 }
