@@ -12,7 +12,7 @@ module.exports = class extends Command {
 
     async execute(message, response) {
         message.buildEmbed()
-            .setColor(0x00adff)
+            .setColor(0x52C7CE)
             .setThumbnail(this.client.user.displayAvatarURL())
             .setTitle(`${this.client.user.username} Statistics`)
             .addField("» Uptime", this.client.functions.convertTime(this.client.uptime), true)
