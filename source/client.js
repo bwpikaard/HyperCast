@@ -6,18 +6,11 @@ const build = process.env.CLIENT_BUILD;
 const config = require(`../configs/${build}`);
 
 let ProcessManager = require("./managers/Process");
-let Database = require("./managers/Database");
 let PermissionsManager = require("./managers/Permissions");
-let ModlogsManager = require("./managers/ModerationLogs");
-let AudioManager = require("./managers/Audio");
 
-let SettingStore = require("./stores/Settings");
 let FunctionStore = require("./stores/Functions");
 let EventStore = require("./stores/Events");
 let CommandStore = require("./stores/Commands");
-
-let AutoModeration = require("./utility/AutoModeration");
-let AudioUtility = require("./utility/Audio");
 
 class TypicalBot extends Client {
     constructor() {
@@ -31,22 +24,15 @@ class TypicalBot extends Client {
         this.shardCount = Number(process.env.SHARD_COUNT);
 
         this.processManager = new ProcessManager(this);
-        this.database = new Database();
         this.permissionsManager = new PermissionsManager(this);
-        this.modlogsManager = new ModlogsManager(this);
-        this.audioManager = new AudioManager(this);
 
-        this.audioUtility = new AudioUtility(this);
-        this.automod = new AutoModeration(this);
-
-        this.settings = new SettingStore(this);
         this.functions = new FunctionStore(this);
         this.events = new EventStore(this);
         this.commands = new CommandStore(this);
 
         this.shardData = {};
         this.testerData = [];
-        
+
         this.donors = new Collection();
 
         this.streams = new Collection();
@@ -95,35 +81,10 @@ class TypicalBot extends Client {
             delete require.cache[`${__dirname}/managers/Process.js`];
             ProcessManager = require("./managers/Process");
             this.processManager = new ProcessManager();
-        } else if (mod === "database") {
-            delete require.cache[`${__dirname}/managers/Database.js`];
-            Database = require("./managers/Database");
-            this.database = new Database();
         } else if (mod === "permissions") {
             delete require.cache[`${__dirname}/managers/Permissions.js`];
             PermissionsManager = require("./managers/Permissions");
             this.permissionsManager = new PermissionsManager(this);
-        } else if (mod === "modlogs") {
-            delete require.cache[`${__dirname}/managers/ModerationLogs.js`];
-            ModlogsManager = require("./managers/ModerationLogs");
-            this.modlogsManager = new ModlogsManager(this);
-        } else if (mod === "audio") {
-            delete require.cache[`${__dirname}/managers/Audio.js`];
-            delete require.cache[`${__dirname}/Structures/Stream.js`];
-            AudioManager = require("./managers/Audio");
-            this.audioManager = new AudioManager(this);
-        } else if (mod === "audioutility") {
-            delete require.cache[`${__dirname}/utility/Audio.js`];
-            AudioUtility = require("./utility/Audio");
-            this.audioUtility = new AudioUtility(this);
-        } else if (mod === "automod") {
-            delete require.cache[`${__dirname}/utility/AudoModeration.js`];
-            AutoModeration = require("./utility/AutoModeration");
-            this.automod = new AutoModeration(this);
-        } else if (mod === "settings") {
-            delete require.cache[`${__dirname}/stores/Settings.js`];
-            SettingStore = require("./stores/Settings");
-            this.settings = new SettingStore(this);
         } else if (mod === "functions") {
             delete require.cache[`${__dirname}/stores/Functions.js`];
             FunctionStore = require("./stores/Functions");

@@ -1,0 +1,16 @@
+{
+    "token": "your-bot-token-here",
+    "id": "bot-id",
+
+    "creator": "105408136285818880",
+
+    "prefix": "h!",
+
+    "levels": {
+        "your-user-id-here": {
+            "level": 3
+        }
+    },
+
+    "shards": 1
+}
