@@ -11,6 +11,12 @@ module.exports = class extends Command {
     }
 
     async execute(message, permissionLevel) {
-        message.reply(`**Here's my current commands:**\n${this.client.commands.map(c => c.name).join(', ')}`);
+        message.buildEmbed()
+            .setColor(0x52C7CE)
+            .setTitle(`${this.client.user.username}`)
+            .addField("» Commands", this.client.commands.map(c => c.name).join(', '), true)
+            .setFooter(this.client.user.username, this.client.user.displayAvatarURL())
+            .setTimestamp()
+            .send();
     }
 };
