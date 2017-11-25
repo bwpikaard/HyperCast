@@ -13,7 +13,7 @@ module.exports = class extends Command {
     async execute(message, permissionLevel) {
         message.buildEmbed()
             .setTitle(`${this.client.user.username} Commands`)
-            .addField("» Commands", this.client.commands.map(c => c.name).join(', '), true)
+            .addField("» Commands", this.client.commands.filter(c => !c.permission || c.permission < 5).map(c => c.name).sort().join(', '), true)
             .send();
     }
 };
