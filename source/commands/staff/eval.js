@@ -20,16 +20,16 @@ module.exports = class extends Command {
                         "color": 0x00FF00,
                         "description": `\n\n\`\`\`js\n${util.inspect(a, { depth: 0 })}\n\`\`\``,
                         "footer": {
-                            "text": "TypicalBot Eval",
-                            "icon_url": "https://typicalbot.com/x/images/icon.png"
+                            "text": `${this.client.user.username} Eval`,
+                            "icon_url": this.client.user.displayAvatarURL()
                         }
                     }).catch(err => {
                         message.embed({
                             "color": 0xFF0000,
                             "description": `\`\`\`\n${err.stack}\n\`\`\``,
                             "footer": {
-                                "text": "TypicalBot Eval",
-                                "icon_url": "https://typicalbot.com/x/images/icon.png"
+                                "text": `${this.client.user.username} Eval`,
+                                "icon_url": this.client.user.displayAvatarURL()
                             }
                         });
                     });
@@ -38,8 +38,8 @@ module.exports = class extends Command {
                         "color": 0xFF0000,
                         "description": `\n\n\`\`\`\n${err ? err.stack : `Unknown Error`}\n\`\`\``,
                         "footer": {
-                            "text": "TypicalBot Eval",
-                            "icon_url": "https://typicalbot.com/x/images/icon.png"
+                            "text": `${this.client.user.username} Eval`,
+                            "icon_url": this.client.user.displayAvatarURL()
                         }
                     });
                 }) :
@@ -48,16 +48,16 @@ module.exports = class extends Command {
                         "color": 0x00FF00,
                         "description": `\`\`\`js\n${util.inspect(output, { depth: 0 })}\n\`\`\``,
                         "footer": {
-                            "text": "TypicalBot Eval",
-                            "icon_url": "https://typicalbot.com/x/images/icon.png"
+                            "text": `${this.client.user.username} Eval`,
+                            "icon_url": this.client.user.displayAvatarURL()
                         }
                     }) :
                     message.embed({
                         "color": 0x00FF00,
                         "description": `\`\`\`\n${output}\n\`\`\``,
                         "footer": {
-                            "text": "TypicalBot Eval",
-                            "icon_url": "https://typicalbot.com/x/images/icon.png"
+                            "text": `${this.client.user.username} Eval`,
+                            "icon_url": this.client.user.displayAvatarURL()
                         }
                     });
             //message.send(`\`INPUT:\`\n\`\`\`\n${code}\n\`\`\`\n\`OUTPUT:\`\n\`\`\`\n${typeof output === "object" ? JSON.stringify(output, null, 4) : output}\n\`\`\``);
@@ -66,8 +66,8 @@ module.exports = class extends Command {
                 "color": 0xFF0000,
                 "description": `\`\`\`\n${err.stack}\n\`\`\``,
                 "footer": {
-                    "text": "TypicalBot Eval",
-                    "icon_url": "https://typicalbot.com/x/images/icon.png"
+                    "text": `${this.client.user.username} Eval`,
+                    "icon_url": this.client.user.displayAvatarURL()
                 }
             }).catch(err => {
                 message.reply("Cannot send embeds.");
