@@ -1,0 +1,3 @@
+/configs/*.json
+!/configs/example.json
+/node_modules/
