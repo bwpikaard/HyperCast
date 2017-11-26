@@ -4,13 +4,13 @@ const { loadavg } = require('os');
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            description: "Get HyperCast's current statistics.",
+            description: "Get the current statistics of the bot.",
             usage: "stats",
             dm: true
         });
     }
 
-    async execute(message, response) {
+    async execute(message, permissionLevel) {
         message.buildEmbed()
             .setThumbnail(this.client.user.displayAvatarURL())
             .setTitle(`${this.client.user.username} Statistics`)

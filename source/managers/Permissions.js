@@ -16,7 +16,7 @@ module.exports = class {
                 if (role instanceof Array) { let isRole = false; role.forEach(r => { if (member.roles.has(r.id)) isRole = true; }); return isRole; } else { return member.roles.has(role.id); }
             }),
             "2" : new PermissionLevel(2, "Server Owner", (guild, member) => member.id === guild.ownerID),
-            "10" : new PermissionLevel(10, "TypicalBot Creator", (guild, id) => id === client.config.creator),
+            "10" : new PermissionLevel(10, "Creator", (guild, id) => id === client.config.creator),
 
         };
     }

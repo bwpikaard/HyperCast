@@ -11,6 +11,7 @@ let PermissionsManager = require("./managers/Permissions");
 let FunctionStore = require("./stores/Functions");
 let EventStore = require("./stores/Events");
 let CommandStore = require("./stores/Commands");
+let StationStore = require("./stores/Stations");
 
 class TypicalBot extends Client {
     constructor() {
@@ -29,7 +30,8 @@ class TypicalBot extends Client {
         this.functions = new FunctionStore(this);
         this.events = new EventStore(this);
         this.commands = new CommandStore(this);
-
+        this.stations = new StationStore(this);
+        
         this.shardData = {};
         this.testerData = [];
 
@@ -77,23 +79,33 @@ class TypicalBot extends Client {
         if (mod === "donors") {
             this.donors = new Collection();
             this.functions.fetchDonors();
-        } else if (mod === "process") {
+        } else
+        
+        if (mod === "process") {
             delete require.cache[`${__dirname}/managers/Process.js`];
             ProcessManager = require("./managers/Process");
             this.processManager = new ProcessManager();
-        } else if (mod === "permissions") {
+        } else
+        
+        if (mod === "permissions") {
             delete require.cache[`${__dirname}/managers/Permissions.js`];
             PermissionsManager = require("./managers/Permissions");
             this.permissionsManager = new PermissionsManager(this);
-        } else if (mod === "functions") {
+        } else
+        
+        if (mod === "functions") {
             delete require.cache[`${__dirname}/stores/Functions.js`];
             FunctionStore = require("./stores/Functions");
             this.functions = new FunctionStore(this);
-        } else if (mod === "events") {
+        } else
+        
+        if (mod === "events") {
             delete require.cache[`${__dirname}/stores/Events.js`];
             EventStore = require("./stores/Events");
             this.events = new EventStore(this);
-        } else if (mod === "commands") {
+        } else
+        
+        if (mod === "commands") {
             const command = match[2];
 
             if (command) {
@@ -105,6 +117,12 @@ class TypicalBot extends Client {
                 CommandStore = require("./stores/Commands");
                 this.commands = new CommandStore(this);
             }
+        } else
+        
+        if (mod === "stations") {
+            delete require.cache[`${__dirname}/stores/Stations.js`];
+            StationStore = require("./stores/Stations");
+            this.stations = new StationStore(this);
         }
     }
 }
