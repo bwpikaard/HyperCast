@@ -34,8 +34,9 @@ class Stations {
     fetchStream() {
         return new Promise((resolve, reject) => {
             const video = this.randomize();
+
             this.validate(video.identifier).then(() => {
-                return resolve({ stream:ytdl(video.identifier, { filter: "audioonly" }), video });
+                return resolve({ stream: ytdl(video.identifier, { filter: "audioonly" }), video });
             }).catch(() => {
                 return this.fetchStream().then(resolve).catch(reject);
             });
@@ -45,7 +46,9 @@ class Stations {
     async play() {
         const data = await this.fetchStream().catch(() => setTimeout(() => this.play(), 1000));
         const { stream, video } = data;
-        this.dispatcher.playStream(stream, { volume:this.station === "country" ? 0.5 : 0.3, passes: 3 });
+
+        this.dispatcher.playStream(stream, { volume: this.station === "country" ? 0.5 : 0.3, passes: 3 });
+
         this.current = video;
     }
 }
