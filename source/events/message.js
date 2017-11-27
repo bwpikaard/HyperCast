@@ -9,9 +9,9 @@ class New extends Event {
 
     async execute(message) {
         if (message.author.bot) return;
+        if (!message.content.startsWith(this.client.config.prefix)) return;
 
         if (message.channel.type === "dm") {
-            if (!message.content.startsWith(this.client.config.prefix)) return;
 
             const command = await this.client.commands.get(message.content.split(" ")[0].slice(this.client.config.prefix.length));
             if (!command || !command.dm || command.permission > 0) return;
