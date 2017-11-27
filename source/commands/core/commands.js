@@ -5,6 +5,7 @@ module.exports = class extends Command {
         super(...args, {
             description: "Lists all commands available.",
             usage: "commands",
+            aliases: ["cmds"],
             dm: true
         });
     }

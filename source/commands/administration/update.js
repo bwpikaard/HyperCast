@@ -6,6 +6,7 @@ module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             dm: true,
+            aliases: ["pull"],
             permission: 10
         });
     }

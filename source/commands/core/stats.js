@@ -6,6 +6,7 @@ module.exports = class extends Command {
         super(...args, {
             description: "Get the current statistics of the bot.",
             usage: "stats",
+            aliases: ["info", "specs"],
             dm: true
         });
     }

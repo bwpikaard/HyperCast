@@ -2,10 +2,10 @@
     "token": "your-bot-token-here",
     "id": "bot-id",
 
-    "pm2Process": "HC",
-    "dirHOME": "/home/hypercoder",
+    "pm2Process": "process-name",
+    "dirHOME": "/path/to/bot/directory",
 
-    "creator": "105408136285818880",
+    "creator": "your-user-id-here",
 
     "prefix": "h!",
 
