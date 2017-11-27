@@ -136,6 +136,6 @@ process
         if (!err) return;
         console.error(`Uncaught Promise Error: \n${err.stack || err}`);
     });
-client.on('debug', e => {
-    console.log(e);
-});
+// client.on('debug', e => {
+//     console.log(e);
+// });

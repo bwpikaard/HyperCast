@@ -10,6 +10,10 @@ module.exports = class extends Command {
     }
 
     async execute(message, permissionLevel) {
-        // Place holder
+        message.buildEmbed()
+            .setTitle(`${this.client.user.username} Stations`)
+            .addField("» Stations", this.client.stations.keyArray().join(", "), true)
+            .send();
+
     }
 };
