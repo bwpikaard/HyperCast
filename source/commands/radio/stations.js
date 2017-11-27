@@ -3,11 +3,16 @@ const Command = require("../../structures/Command");
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            usage: "station"
+            usage: "tune",
+            aliases: ["stations"],
+            dm: true
         });
     }
 
     async execute(message, permissionLevel) {
-        // Place holder
+        message.buildEmbed()
+            .addField("» Stations", this.client.stations.keyArray().join(", "), true)
+            .send();
+
     }
 };
