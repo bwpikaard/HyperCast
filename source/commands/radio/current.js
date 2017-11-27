@@ -14,8 +14,8 @@ module.exports = class extends Command {
         const station = message.guild.voiceConnection.station;
         if (!station) message.error("An error occured.");
 
+        const broadcast = this.client.stations.get(station);
 
-
-        // message.reply(`Playing **${}** on the **${station}** station.`)
+        message.reply(`Playing **${broadcast.current.title}** on the **${station}** station.`);
     }
 };
