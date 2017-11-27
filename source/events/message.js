@@ -24,6 +24,8 @@ class New extends Event {
 
             if (message.content.match(this.mentionRegex)) return message.reply(`The prefix to use my commands is \`${this.client.config.prefix}\`.`);
 
+            if (!message.content.startsWith(this.client.config.prefix)) return;
+
             const userPermissions = this.client.permissionsManager.get(message.guild, message.author);
             if (userPermissions.level === -1) return;
 
