@@ -13,5 +13,6 @@ module.exports = class extends Command {
         if (!connection) return message.error("I am not in a voice channel in this server.");
 
         connection.disconnect();
+        message.reply("Leaving voice channel.");
     }
 };
