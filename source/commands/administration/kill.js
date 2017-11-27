@@ -3,13 +3,14 @@ const Command = require("../../structures/Command");
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
-            usage: "tune",
-            aliases: ["stations"],
-            dm: true
+            usage: "kill",
+            dm: true,
+            permission: 10
         });
     }
 
     async execute(message, permissionLevel) {
-        // Place holder
+        console.error("Kill command executed.");
+        message.reply("Killing process.").then(() => process.exit());
     }
 };

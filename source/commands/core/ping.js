@@ -5,8 +5,7 @@ module.exports = class extends Command {
         super(...args, {
             description: "Responds with the command execution time and Discord API latency.",
             usage: "ping",
-            dm: true,
-            mode: "strict"
+            dm: true
         });
     }
 

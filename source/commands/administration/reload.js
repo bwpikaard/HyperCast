@@ -5,7 +5,6 @@ module.exports = class extends Command {
         super(...args, {
             usage: "reload <command>",
             dm: true,
-            mode: "strict",
             permission: 10
         });
     }

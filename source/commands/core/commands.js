@@ -5,8 +5,7 @@ module.exports = class extends Command {
         super(...args, {
             description: "Lists all commands available.",
             usage: "commands",
-            dm: true,
-            mode: "strict"
+            dm: true
         });
     }
 

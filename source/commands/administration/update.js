@@ -5,6 +5,7 @@ const { join } = require("path");
 module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
+            dm: true,
             permission: 10
         });
     }

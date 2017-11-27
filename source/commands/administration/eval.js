@@ -5,6 +5,7 @@ module.exports = class extends Command {
     constructor(...args) {
         super(...args, {
             mode: "strict",
+            dm: true,
             permission: 10
         });
     }
