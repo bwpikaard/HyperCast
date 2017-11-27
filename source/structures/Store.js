@@ -15,8 +15,8 @@ class Store extends Collection {
 
     load(path, ext, name) {
         const file = require(path);
-
-        this.set(name, ext === "js" ? new file(this.client, name, path) : file);
+        const req = ext === "js" ? new file(this.client, name, path) : file;
+        this.set(name, req);
     }
     
     loadAll(ext = "js") {
