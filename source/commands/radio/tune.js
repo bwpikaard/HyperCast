@@ -28,6 +28,7 @@ module.exports = class extends Command {
             
             currConn.playBroadcast(broadcast);
         } else {
+            if (channel.members.filter(u => u.user.bot).size > 0) return message.error("I cannot join because another bot is present.");
             channel.join().then(conn => {
                 conn.station = station;
 

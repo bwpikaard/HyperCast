@@ -13,8 +13,7 @@ module.exports = class extends Command {
 
     async execute(message, permissionLevel) {
         message.buildEmbed()
-            .setThumbnail(this.client.user.displayAvatarURL())
-            .setTitle(`${this.client.user.username} Statistics`)
+            .setTitle("Statistics")
             .addField("» Uptime", this.client.functions.convertTime(this.client.uptime), true)
             .addField("» Servers", `${this.client.shardData.guilds.toLocaleString()} (${this.client.shardCount} Shard${this.client.shardCount > 1 ? "s" : ""})`, true)
             .addField("» Voice Connections", `${this.client.shardData.voiceConnections.toLocaleString()}`, true)
