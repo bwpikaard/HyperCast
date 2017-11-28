@@ -1,67 +1,29 @@
-const { fork } = require("child_process");
-const { build } = require("./package");
+require.extensions['.txt'] = function (module, filename) { module.exports = require("fs").readFileSync(filename, 'utf8'); };
+
+const { Collection } = require("discord.js");
+
+const build = require("./build");
+console.log(build);
 const config = require(`./configs/${build}`);
-const Discord = require("discord.js");
-const request = require("superagent");
 
 const SHARD_COUNT   = config.shards;
 const CLIENT_TOKEN  = config.token;
 
-class Shard extends fork {
-    constructor(master, id) {
-        super(`${__dirname}/source/client.js`, [], { env: { SHARD_ID: id, SHARD_COUNT, CLIENT_TOKEN, CLIENT_BUILD: build } });
+const Shard = require("./structures/Shard");
 
-        this.id = id;
-
-        this.stats = {};
-
-        this.master = master;
-
-        this.on("message", message => {
-            if (message.type === "stat" || message.type === "stats") {
-                this.master.changeStats(this.id, message.data);
-            } else if (message.type === "donors") {
-                this.master.donorData = message.data;
-                this.master.transmit(message.type, message.data);
-            } else {
-                this.master.transmit(message.type, message.data);
-            }
-        });
-    }
-}
-
-new class {
+class ShardingMaster extends Collection {
     constructor() {
-        this.shards = new Discord.Collection();
+        super();
+        
         this.stats = [];
-        this.pendingRequests = new Discord.Collection();
 
-        this.donorData = [];
-
-        this.init();
+        for (let s = 0; s < SHARD_COUNT; s++) {
+            setTimeout(this.set.bind(this), (9000 * s), s, new Shard(this, s, SHARD_COUNT, CLIENT_TOKEN, build));
+        }
     }
 
-    create(id) {
-        this.shards.set(id, new Shard(this, id));
-    }
-
-    changeStats(shard, data) {
-        Object.keys(data).map(key => this.shards.get(shard).stats[key] = data[key]);
-        this.relayStats();
-    }
-
-    relayStats() {
-        const data = {};
-        this.shards.forEach(shard => {
-            Object.keys(shard.stats).forEach(key => {
-                data[key] ? data[key] += shard.stats[key] : data[key] = shard.stats[key];
-            });
-        });
-        this.transmit("stats", data);
-    }
-
-    transmit(type, data) {
-        this.shards.forEach(shard => {
+    broadcast(type, data) {
+        this.forEach(shard => {
             shard.send({
                 type,
                 data
@@ -69,9 +31,19 @@ new class {
         });
     }
 
-    init() {
-        for (let s = 0; s < SHARD_COUNT; s++) {
-            setTimeout(this.create.bind(this), (9000 * s), s);
-        }
+    updateStats(shard, data) {
+        Object.keys(data).map(key => this.get(shard).stats[key] = data[key]);
+
+        const newData = {};
+        
+        this.forEach(shard => {
+            Object.keys(shard.stats).forEach(key => {
+                newData[key] ? newData[key] += shard.stats[key] : newData[key] = shard.stats[key];
+            });
+        });
+
+        this.broadcast("stats", newData);
     }
-};
+}
+
+new ShardingMaster();

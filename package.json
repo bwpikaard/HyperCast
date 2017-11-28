@@ -28,7 +28,5 @@
         "simple-youtube-api": "github:hypercoder2975/simple-youtube-api",
         "simple-youtube-stream": "github:hypercoder2975/simple-youtube-stream",
         "ytdl-core": "github:fent/node-ytdl-core"
-    },
-
-    "build": "beta"
+    }
 }

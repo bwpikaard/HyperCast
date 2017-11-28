@@ -1,7 +1,3 @@
 /configs/*.json
-!package.json
-!package-lock.json
-!/configs/config_example.json
-!/stations/
-playlist_filter.js
+!/configs/example.json
 /node_modules/

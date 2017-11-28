@@ -1,56 +1,55 @@
-require("./utility/Extenders.js");
+require("./utility/Extenders");
 
-const { Client, Collection } = require("discord.js");
+const { Client, Collection, Constants } = require("discord.js");
 
-//let Database = require("./managers/Database");
+const build = process.env.CLIENT_BUILD;
+const config = require(`../configs/${build}`);
 
-let EventsManager = require("./managers/Events");
-let CommandsManager = require("./managers/Commands");
-//let SettingsManager = require("./managers/Settings");
-const BroadcastsManager = require("./managers/Broadcasts");
+let ProcessManager = require("./managers/Process");
+let PermissionsManager = require("./managers/Permissions");
 
-let Functions = require("./utility/Functions");
+let FunctionStore = require("./stores/Functions");
+let EventStore = require("./stores/Events");
+let CommandStore = require("./stores/Commands");
+let StationStore = require("./stores/Stations");
 
-const client = new class extends Client {
+class TypicalBot extends Client {
     constructor() {
-        super({ messageCacheMaxSize: 150 });
+        super(config.clientOptions);
 
-        this.build = process.env.CLIENT_BUILD;
-        this.config = require(`../configs/${this.build}`);
+        this.build = build;
+        this.config = config;
 
-        this.shardID = +process.env.SHARD_ID;
-        this.shardNumber = +process.env.SHARD_ID + 1;
-        this.shardCount = +process.env.SHARD_COUNT;
+        this.shardID = Number(process.env.SHARD_ID);
+        this.shardNumber = Number(process.env.SHARD_ID) + 1;
+        this.shardCount = Number(process.env.SHARD_COUNT);
 
-        //this.database = new Database();
+        this.processManager = new ProcessManager(this);
+        this.permissionsManager = new PermissionsManager(this);
 
-        this.eventsManager = new EventsManager(this);
-        this.commandsManager = new CommandsManager(this);
-        //this.settingsManager = new SettingsManager(this);
-        this.broadcastsManager = new BroadcastsManager(this);
-
-        this.functions = new Functions(this);
-
-        this.shardData = {};
-
-        /*this.once("ready", () => {
-            setTimeout(() => this.broadcastsManager.begin(), 5000);
-        })*/
+        this.functions = new FunctionStore(this);
+        this.events = new EventStore(this);
+        this.commands = new CommandStore(this);
+        this.stations = new StationStore(this);
         
-        this.once("ready", () => this.eventsManager.ready())
-            .on("message", message => this.eventsManager.message(message))
-            .on("error", err => this.log(err, true))
-            .on("warn", err => this.log(err, true))
-            .on("disconnect", () => this.log("Disconnected!"))
-            .on("reconnecting", () => this.log("Reconnecting!"));
+        this.shardData = {};
+        this.testerData = [];
 
-        this.login(this.config.token);
+        this.donors = new Collection();
+
+        this.streams = new Collection();
+
+        this.banCache = new Collection();
+        this.unbanCache = new Collection();
+        this.softbanCache = new Collection();
+
+        this.login(config.token);
     }
 
     log(content, error = false) {
         error ?
-            console.error(`SHARD ${this.shardID} | ${content}`) :
-            console.log(`SHARD ${this.shardID} | ${content}`);
+            console.error(content) :
+            console.log(content);
     }
 
     transmit(type, data = {}) {
@@ -77,44 +76,66 @@ const client = new class extends Client {
         const mod = match ? match[1] : null;
         const all = input === "all";
 
-        // if (mod === "database") {
-        //     delete require.cache[`${__dirname}/Managers/Database.js`];
-        //     Database = require("./Managers/Database");
-        //     this.database = new Database();
-        // } else
+        if (mod === "donors") {
+            this.donors = new Collection();
+            this.functions.fetchDonors();
+        } else
         
-        if (all || mod === "events") {
-            delete require.cache[`${__dirname}/Managers/Events.js`];
-            EventsManager = require("./Managers/Events");
-            this.eventsManager = new EventsManager(this);
-        } else if (mod === "commands") {
+        if (mod === "process") {
+            delete require.cache[`${__dirname}/managers/Process.js`];
+            ProcessManager = require("./managers/Process");
+            this.processManager = new ProcessManager();
+        } else
+        
+        if (mod === "permissions") {
+            delete require.cache[`${__dirname}/managers/Permissions.js`];
+            PermissionsManager = require("./managers/Permissions");
+            this.permissionsManager = new PermissionsManager(this);
+        } else
+        
+        if (mod === "functions") {
+            delete require.cache[`${__dirname}/stores/Functions.js`];
+            FunctionStore = require("./stores/Functions");
+            this.functions = new FunctionStore(this);
+        } else
+        
+        if (mod === "events") {
+            delete require.cache[`${__dirname}/stores/Events.js`];
+            EventStore = require("./stores/Events");
+            this.events = new EventStore(this);
+        } else
+        
+        if (mod === "commands") {
             const command = match[2];
 
             if (command) {
-                this.commandsManager.get(command).then(cmd => {
-                    if (!cmd) return; this.commandsManager.reload(cmd.path);
+                this.commands.get(command).then(cmd => {
+                    if (!cmd) return; this.commands.reload(cmd);
                 });
             } else {
-                delete require.cache[`${__dirname}/Managers/Commands.js`];
-                CommandsManager = require("./Managers/Commands");
-                this.commandsManager = new CommandsManager(this);
+                delete require.cache[`${__dirname}/stores/Commands.js`];
+                CommandStore = require("./stores/Commands");
+                this.commands = new CommandStore(this);
             }
         } else
         
-        // if (mod === "settings") {
-        //     delete require.cache[`${__dirname}/Managers/Settings.js`];
-        //     SettingsManager = require("./Managers/Settings");
-        //     this.settingsManager = new SettingsManager(this);
-        // } else
-        
-        if (all || mod === "functions") {
-            delete require.cache[`${__dirname}/Utility/Functions.js`];
-            Functions = require("./Utility/Functions");
-            this.functions = new Functions(this);
+        if (mod === "stations") {
+            delete require.cache[`${__dirname}/stores/Stations.js`];
+            StationStore = require("./stores/Stations");
+            this.stations = new StationStore(this);
         }
     }
-};
+}
 
-process.on("message", message => {
-    if (message.type === "stats") client.shardData = message.data;
-});
+const client = new TypicalBot();
+
+process
+    .on("message", msg => client.processManager.message(msg))
+    .on("uncaughtException", err => client.log(err.stack, true))
+    .on("unhandledRejection", err => {
+        if (!err) return;
+        console.error(`Uncaught Promise Error: \n${err.stack || err}`);
+    });
+// client.on('debug', e => {
+//     console.log(e);
+// });
