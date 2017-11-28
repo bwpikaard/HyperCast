@@ -3,7 +3,7 @@
     "id": "bot-id",
 
     "pm2Process": "process-name",
-    "dirHOME": "/path/to/bot/directory",
+    "dirHOME": "/path/to/user",
 
     "creator": "your-user-id-here",
 
