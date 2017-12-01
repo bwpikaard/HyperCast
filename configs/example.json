@@ -1,0 +1,15 @@
+{
+    "token": "your-bot-token-here",
+    "id": "bot-id",
+
+    "pm2Process": "process-name",
+    "dirHOME": "/path/to/bot/directory",
+
+    "creator": "your-user-id-here",
+
+    "prefix": "h!",
+
+    "embedColor": "00aa00",
+
+    "shards": 1
+}
