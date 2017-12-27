@@ -14,7 +14,8 @@ module.exports = class extends Command {
         const volume = message.content.split(" ")[1];
         if (!volume) return message.reply(`The current volume is ${message.guild.voiceConnection.dispatcher.volume * 100}%`);
 
-        if (!isNaN(volume) && (volume < 0 || volume > 200)) return message.error("Volume must be from 0% to 200%.");
+        if (isNaN(volume)) return message.error('That is not a valid number');
+        if (volume < 0 || volume > 200) return message.error('Volume must be from 0% to 200%.');
 
         message.guild.voiceConnection.dispatcher.setVolume(volume / 100);
 
