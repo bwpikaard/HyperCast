@@ -19,12 +19,12 @@ class New extends Event {
             command.execute(message);
         } else {
             if (!message.guild.me) return;
+            if (!message.content.startsWith(this.client.config.prefix)) return;
             if (!message.channel.permissionsFor(message.guild.me).has("SEND_MESSAGES")) return;
             if (!message.channel.permissionsFor(message.guild.me).has("EMBED_LINKS")) return message.error("I use embeds to reply to messages. Please give me permissions to embed links.");
 
             if (message.content.match(this.mentionRegex)) return message.reply(`The prefix to use my commands is \`${this.client.config.prefix}\`.`);
 
-            if (!message.content.startsWith(this.client.config.prefix)) return;
 
             const userPermissions = this.client.permissionsManager.get(message.guild, message.author);
             if (userPermissions.level === -1) return;
