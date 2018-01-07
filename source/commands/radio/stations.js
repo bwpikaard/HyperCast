@@ -10,9 +10,14 @@ module.exports = class extends Command {
     }
 
     async execute(message, permissionLevel) {
-        message.buildEmbed()
-            .addField("» Stations", this.client.stations.keyArray().join(", "), true)
-            .send();
+        const perms = message.channel.permissionsFor(message.client.user).has("EMBED_LINKS");
+        if (perms) {
+            message.buildEmbed()
+                .addField("» Stations", this.client.stations.keyArray().join(", "), true)
+                .send();
+        } else {
+            message.channel.send(`» Stations\n${this.client.stations.keyArray().join(", ")}`);
+        }
 
     }
 };
