@@ -8,7 +8,7 @@ module.exports = class extends Command {
             dm: true
         });
     }
-
+ 
     async execute(message, permissionLevel) {
         const channel = message.member.voiceChannel;
         if (!channel) return message.error("You are not in a voice channel!");
@@ -26,7 +26,7 @@ module.exports = class extends Command {
 
             message.reply(`Retuning to the ${station} station.`);
             
-            currConn.playBroadcast(broadcast);
+            currConn.play(broadcast);
         } else {
             if (channel.members.filter(u => u.user.bot).size > 0) return message.error("I cannot join because another bot is present.");
             channel.join().then(conn => {
@@ -34,7 +34,7 @@ module.exports = class extends Command {
 
                 message.reply(`Tuning to the ${station} station.`);
                 
-                setTimeout(() => conn.playBroadcast(broadcast), 1000);
+                setTimeout(() => conn.play(broadcast), 1000);
             }).catch(err => {
                 message.error(`An error occured while joining the voice channel. Make sure I have permissions to join and speak.`);
             });

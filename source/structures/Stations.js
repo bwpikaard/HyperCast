@@ -47,7 +47,7 @@ class Stations {
         const data = await this.fetchStream().catch(() => setTimeout(() => this.play(), 1000));
         const { stream, video } = data;
 
-        this.dispatcher.playStream(stream, { volume: this.station === "country" ? 0.5 : 0.3, passes: 3 });
+        this.dispatcher.play(stream, { volume: this.station === "country" ? 0.5 : 0.3, passes: 3 });
 
         this.current = video;
     }
